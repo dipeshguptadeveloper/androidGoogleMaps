@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Geocoder.GeocodeListener
+import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,7 +21,10 @@ import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import io.nlopez.smartlocation.OnLocationUpdatedListener
+import io.nlopez.smartlocation.SmartLocation
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var binding: ActivityMainBinding
@@ -97,6 +101,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 .clickable(true)
         )
 
+
+        val listPolyLatLng = mutableListOf<LatLng>().apply {
+            add(LatLng(19.0760, 72.8777))
+            add(LatLng(19.0780, 72.8778))
+            add(LatLng(19.0790, 72.8779))
+            add(LatLng(19.0740, 72.8778))
+            add(LatLng(19.0760, 72.8777))
+        }
+
+        mMaps.addPolygon(
+            PolygonOptions().addAll(listPolyLatLng)
+                .strokeColor(Color.BLUE).fillColor(Color.RED)
+                .clickable(true)
+        )
+
+        SmartLocation
+            .with(this@MainActivity)
+            .location()
+            .continuous()
+            .start { loc ->
+                Log.d("Current Position", "${loc.latitude},${loc.longitude}")
+
+            }
 
     }
 
